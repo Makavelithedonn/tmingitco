@@ -1,0 +1,28 @@
+name = "makavelithedonn-clone-rgosuksa"
+main = "workers/worker.js"
+compatibility_date = "2026-09-01"
+
+[env]
+
+# Bindings: adjust the values locally / in Cloudflare dashboard
+[vars]
+# DEV_SHOW_OTP=1 makes the worker return the OTP in /api/request-otp response for local testing ONLY
+DEV_SHOW_OTP = "0"
+# Mock SMS provider key placeholder (do NOT commit real keys). Implement provider logic in workers/worker.js when integrating.
+SMS_API_KEY = "__SMS_API_KEY_PLACEHOLDER__"
+# HMAC secret should be set via wrangler secret put in production; placeholder here for local experiments
+HMAC_SECRET = "__HMAC_SECRET_PLACEHOLDER__"
+
+[[kv_namespaces]]
+binding = "OTP_KV"
+id = "__KV_OTP_ID__"
+
+[[kv_namespaces]]
+binding = "RATE_KV"
+id = "__KV_RATE_ID__"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "__D1_DB_NAME__"
+
+# Do NOT commit secrets. Set HMAC_SECRET with `wrangler secret put HMAC_SECRET` or via GitHub Actions secrets.
