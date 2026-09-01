@@ -1,0 +1,14 @@
+{
+  "name": "makavelithedonn-clone-rgosuksa",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start:site": "npx serve site -p 8080",
+    "dev": "DEV_SHOW_OTP=1 wrangler dev --local workers/worker.js",
+    "test:integration": "node tests/run-integration-tests.js",
+    "crawl:skeleton": "node scripts/crawl-skeleton.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

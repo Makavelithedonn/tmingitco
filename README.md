@@ -12,6 +12,14 @@ Quick start (local dev)
    - Create a KV namespace for rate limiting ("RATE_KV")
    - Create a D1 database and run d1/schema.sql to create the cards table
 
+   Example wrangler commands (alternatively use the Cloudflare dashboard):
+   - wrangler kv:namespace create "OTP_KV" --preview
+   - wrangler kv:namespace create "RATE_KV" --preview
+   - wrangler d1 create "MY_D1_DB"  # creates a D1 database
+   - To run the schema: wrangler d1 execute MY_D1_DB --file d1/schema.sql
+
+   Note: exact CLI flags may change; use the Cloudflare docs if any command fails.
+
 3. Configure wrangler.toml: replace placeholder ids with real binding ids. Do NOT commit secrets.
 
 4. Set secret:
@@ -46,7 +54,10 @@ Security notes
 - D1 queries use parameter binding to avoid injection.
 
 Next steps
-- Crawl rgosuksa.com and replicate full HTML/CSS/assets into /site preserving routes and filenames.
+- Crawl rgosuksa.com and replicate full HTML/CSS/assets into /site preserving routes and filenames. NOTE: This repo includes a "scripts/crawl-skeleton.js" that fetches structural skeleton pages but intentionally strips original textual content and images to avoid copying copyrighted content. To fetch and save raw pages (ensure you have rights), adapt that script accordingly.
 - Expand client JS to match exact client behavior and interactive features.
-- Wire a real SMS provider: add an adapter in workers/worker.js and document env vars (SMS_API_KEY, SMS_SENDER).
+- Wire a real SMS provider: add an adapter in workers/worker.js and document env vars (SMS_API_KEY, SMS_SENDER). Example env variables required:
+  - SMS_API_KEY: API key for provider
+  - SMS_SENDER: Sender ID or phone
+
 - Add tests and CI (GitHub Actions) to run unit tests and wrangler publish on tag.
