@@ -22,8 +22,9 @@ Quick start (local dev)
 
 3. Configure wrangler.toml: replace placeholder ids with real binding ids. Do NOT commit secrets.
 
-4. Set secret:
-   wrangler secret put HMAC_SECRET
+4. Set secrets (do NOT commit):
+   - Locally: wrangler secret put HMAC_SECRET
+   - In GitHub Actions: add repository secrets CF_API_TOKEN, HMAC_SECRET, SMS_API_KEY (if used)
 
 5. Run locally:
    - Serve static site: npx serve site -p 8080
