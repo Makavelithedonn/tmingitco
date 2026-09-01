@@ -2,8 +2,9 @@ Clone of rgosuksa.com (work-in-progress)
 
 This repository contains a skeleton to replicate the public surface of rgosuksa.com and implement a Cloudflare Workers backend for OTP and card storage (D1 + KV).
 
-**Live Deployment** (tested and working):
-- Worker URL: https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev
+**Live Deployment** (tested and working — **completely free, no domain purchase needed**):
+- **Static Site:** https://makavelithedonn-rgosuksa-clone.pages.dev (Cloudflare Pages)
+- **Worker API:** https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev (Cloudflare Workers)
 - KV Namespaces: OTP_KV (d1b917d366f34b0a8f132b58c294a69a), RATE_KV (a7ee726af5284e3ebb5649847bb0bde4)
 - D1 Database: rgosuksa_db (4fa3a192-b0dc-47f5-9ede-b25c7d1fb469)
 
