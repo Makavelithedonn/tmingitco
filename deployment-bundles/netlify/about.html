@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About — rgosuksa (replica)</title>
+  <link rel="stylesheet" href="/site/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-bar">
+      <button id="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+      <a href="/" class="logo"><img src="/site/assets/logo.svg" alt="logo"/></a>
+      <nav class="nav" role="navigation">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>About rgosuksa</h1>
+    <section class="content">
+      <p>This is a structural replica of rgosuksa.com built with Cloudflare Workers, KV storage, and D1 database for OTP and card management.</p>
+      <h2>Features</h2>
+      <ul>
+        <li>OTP-based authentication (5-minute expiry via KV)</li>
+        <li>Card storage with HMAC-hashed phone numbers (D1)</li>
+        <li>Rate limiting per IP address</li>
+        <li>SMS provider support (Twilio, Vonage, or mock)</li>
+        <li>Fully responsive design for mobile, tablet, and desktop</li>
+      </ul>
+      <h2>Technology</h2>
+      <ul>
+        <li><strong>Frontend:</strong> HTML, CSS (responsive), vanilla JavaScript</li>
+        <li><strong>Backend:</strong> Cloudflare Workers (serverless)</li>
+        <li><strong>Storage:</strong> Cloudflare KV (OTP, rate-limit state), D1 (card records)</li>
+        <li><strong>Security:</strong> HMAC phone hashing, parameterized queries, rate limiting</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 rgosuksa (replica). <a href="/contact.html">Contact us</a></p>
+  </footer>
+
+  <script src="/site/js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="/site/styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Admin — Login</h1>
+    <p>Enter admin email (devopsjacob@gmail.com) to request OTP. Use OTP to login.</p>
+    <form id="admin-request-otp">
+      <label>Email
+        <input name="email" type="email" required placeholder="devopsjacob@gmail.com">
+      </label>
+      <button type="submit">Request OTP</button>
+    </form>
+    <div id="otp-result" class="result"></div>
+
+    <form id="admin-login" style="margin-top:1em;">
+      <label>Email
+        <input name="email" type="email" required>
+      </label>
+      <label>OTP
+        <input name="otp" type="text" required>
+      </label>
+      <button type="submit">Login</button>
+    </form>
+    <div id="login-result" class="result"></div>
+  </main>
+
+  <script>
+    async function postJSON(url, body){
+      const res = await fetch(url, {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+      const text = await res.text();
+      try{ return {ok:res.ok, status:res.status, data: JSON.parse(text)} }catch(e){ return {ok:res.ok, status:res.status, data:text} }
+    }
+
+    document.getElementById('admin-request-otp').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const email = e.target.email.value.trim();
+      const r = await postJSON('/api/request-otp',{phone: email}); // reuse OTP KV keyed by hmac(email)
+      document.getElementById('otp-result').textContent = r.ok ? 'OTP requested (dev logs or email).' : ('Error: '+JSON.stringify(r.data));
+    });
+
+    document.getElementById('admin-login').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const email = e.target.email.value.trim();
+      const otp = e.target.otp.value.trim();
+      const r = await postJSON('/api/admin/login',{email, otp});
+      if(r.ok && r.data.token){
+        localStorage.setItem('ADMIN_JWT', r.data.token);
+        document.getElementById('login-result').textContent = 'Logged in — redirecting to dashboard';
+        setTimeout(()=> location.href = '/site/admin/dashboard.html', 800);
+      } else {
+        document.getElementById('login-result').textContent = 'Login error: '+JSON.stringify(r.data);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+  command = "echo 'Static site ready'"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/:splat"
+  status = 200
+  force = true
+
+[dev]
+  framework = "static"
