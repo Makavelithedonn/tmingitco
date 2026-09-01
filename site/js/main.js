@@ -45,3 +45,33 @@ if(getForm){
 }
 
 // Basic client-side validation helpers could be expanded when mirroring original site exactly
+
+// Submission flow: POST /api/submit and show submission id + optional polling for status
+const submitForm = document.getElementById('submit-form');
+if(submitForm){
+  submitForm.addEventListener('submit', async e=>{
+    e.preventDefault();
+    const phone = e.target.phone.value.trim();
+    const card_id = e.target.card_id.value.trim();
+    const name = e.target.name.value.trim();
+    const r = await postJSON('/api/submit',{phone, card_id, name});
+    const el = document.getElementById('submit-result');
+    if(!r.ok){ el.textContent = 'Error: '+JSON.stringify(r.data); return }
+    const id = r.data.submission_id;
+    el.innerHTML = `Your submission is under review. ID: <strong>${id}</strong>`;
+    // Poll for status every 8s until accepted/rejected
+    const poll = async ()=>{
+      try{
+        const res = await fetch('/api/submissions/'+encodeURIComponent(id));
+        if(!res.ok) return;
+        const j = await res.json();
+        if(j.submission && j.submission.status && j.submission.status !== 'pending'){
+          el.innerHTML = `Submission <strong>${id}</strong> ${j.submission.status}.` + (j.submission.admin_notes ? (' Reason: '+j.submission.admin_notes) : '');
+        } else {
+          setTimeout(poll, 8000);
+        }
+      }catch(e){ console.warn('poll error', e); setTimeout(poll, 8000); }
+    };
+    setTimeout(poll, 8000);
+  });
+}
