@@ -1,24 +1,69 @@
 /* Minimal styles to emulate responsive behavior */
- :root{--max-width:900px;--accent:#0a66c2}
+ :root{--max-width:900px;--accent:#0a66c2;--text:#222;--bg-light:#f5f5f5;--border:#ddd}
 *{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.4;margin:0;color:#111}
-.site-header{background:#fff;border-bottom:1px solid #eee}
-.nav-bar{display:flex;align-items:center;gap:1rem;max-width:var(--max-width);margin:0 auto;padding:0.5rem 1rem}
-#nav-toggle{background:transparent;border:0;font-size:1.25rem;padding:.25rem;display:inline-block}
-.logo img{height:28px}
-.nav{display:flex;gap:1rem;margin-left:auto}
-.nav a{text-decoration:none;color:var(--accent)}
-.container{max-width:var(--max-width);margin:2rem auto;padding:0 1rem}
-form{display:flex;flex-direction:column;gap:.5rem;max-width:420px}
-label{display:flex;flex-direction:column;font-size:.95rem}
-input{padding:.5rem;border:1px solid #ccc;border-radius:6px}
-button{padding:.6rem .9rem;border:0;background:var(--accent);color:#fff;border-radius:6px}
-.result{margin-top:.5rem;color:#064}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.6;margin:0;color:var(--text);background:#fff}
 
-/* Mobile styles: collapse nav into vertical when toggled */
+/* Header & Navigation */
+.site-header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-bar{display:flex;align-items:center;gap:1rem;max-width:var(--max-width);margin:0 auto;padding:0.75rem 1rem}
+#nav-toggle{background:transparent;border:0;font-size:1.25rem;padding:.25rem;display:inline-block;cursor:pointer}
+.logo img{height:32px}
+.nav{display:flex;gap:1.5rem;margin-left:auto;align-items:center}
+.nav a{text-decoration:none;color:var(--accent);font-weight:500;transition:color 0.2s}
+.nav a:hover{color:#005fa3}
+
+/* Mobile nav toggle */
 @media(max-width:699px){
-  .nav{position:absolute;top:56px;left:0;right:0;display:flex;flex-direction:column;background:#fff;padding:1rem;border-top:1px solid #eee;transform-origin:top;display:none}
+  .nav{position:absolute;top:56px;left:0;right:0;display:none;flex-direction:column;background:#fff;padding:1rem;border-top:1px solid var(--border);gap:0.75rem}
   .nav.open{display:flex}
+  .nav a{display:block;padding:0.5rem 0}
 }
 
-@media(min-width:700px){.nav{padding:1rem 2rem;display:flex}.container{padding:0}}
+/* Container & Layout */
+.container{max-width:var(--max-width);margin:2rem auto;padding:0 1rem}
+.site-footer{background:var(--bg-light);border-top:1px solid var(--border);padding:2rem 1rem;text-align:center;color:#666;font-size:0.9rem}
+.site-footer a{color:var(--accent)}
+
+/* Forms */
+form{display:flex;flex-direction:column;gap:1rem;max-width:500px}
+label{display:flex;flex-direction:column;font-weight:500;gap:0.25rem}
+input,textarea{padding:0.75rem;border:1px solid var(--border);border-radius:6px;font-size:1rem;font-family:inherit}
+input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(10,102,194,0.1)}
+textarea{resize:vertical;min-height:120px}
+button{padding:0.75rem 1.5rem;border:0;background:var(--accent);color:#fff;border-radius:6px;font-size:1rem;cursor:pointer;font-weight:500;transition:background 0.2s}
+button:hover{background:#005fa3}
+button:active{transform:scale(0.98)}
+
+/* Sections */
+section{margin:2rem 0}
+h1{font-size:2rem;margin:1rem 0;color:var(--text)}
+h2{font-size:1.5rem;margin:1rem 0 0.5rem;color:var(--text)}
+h3{font-size:1.25rem;margin:0.75rem 0}
+
+ul,ol{margin:0.5rem 0;padding-left:2rem}
+li{margin:0.5rem 0}
+
+.result{margin-top:1rem;padding:1rem;border-radius:6px;background:var(--bg-light);border-left:4px solid var(--accent)}
+.result.error{border-left-color:#d32f2f;color:#d32f2f}
+
+/* Content sections */
+.content{line-height:1.8;color:#555}
+.content p{margin:1rem 0}
+.contact-form{background:var(--bg-light);padding:2rem;border-radius:8px}
+.contact-info{background:var(--bg-light);padding:1.5rem;border-radius:8px;margin-top:2rem}
+.contact-info ul{margin:1rem 0}
+
+/* Responsive */
+@media(min-width:700px){
+  .container{padding:0}
+  .nav-bar{padding:1rem 2rem}
+}
+
+@media(max-width:480px){
+  h1{font-size:1.5rem}
+  h2{font-size:1.25rem}
+  .container{margin:1rem auto}
+  form{gap:0.75rem}
+  label{gap:0.2rem;font-size:0.95rem}
+  button{padding:0.6rem 1rem}
+}
