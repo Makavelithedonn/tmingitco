@@ -1,0 +1,16 @@
+# Curl examples to test endpoints (local wrangler dev at :8787)
+
+# Request OTP
+curl -X POST http://127.0.0.1:8787/api/request-otp -H 'Content-Type: application/json' -d '{"phone":"+966512345678"}'
+
+# Verify OTP (use the OTP logged by the worker during dev)
+curl -X POST http://127.0.0.1:8787/api/verify-otp -H 'Content-Type: application/json' -d '{"phone":"+966512345678","otp":"123456"}'
+
+# Create card
+curl -X POST http://127.0.0.1:8787/api/cards -H 'Content-Type: application/json' -d '{"card_id":"card-001","name":"Test","phone":"+966512345678"}'
+
+# Get card
+curl http://127.0.0.1:8787/api/cards/card-001
+
+# Rate limit test: repeat request-otp rapidly to trigger rate limiting
+for i in {1..20}; do curl -s -X POST http://127.0.0.1:8787/api/request-otp -H 'Content-Type: application/json' -d '{"phone":"+9665123'$i'"}'; echo; done

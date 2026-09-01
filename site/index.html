@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>rgosuksa — replicated</title>
+  <link rel="stylesheet" href="/site/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a href="/">Home</a>
+      <a href="#cards">Cards</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>rgosuksa.com — local replica (skeleton)</h1>
+
+    <section id="otp">
+      <h2>Request OTP</h2>
+      <form id="request-otp-form">
+        <label>Phone
+          <input name="phone" type="tel" required placeholder="+9665...">
+        </label>
+        <button type="submit">Request OTP</button>
+      </form>
+      <div id="request-otp-result" class="result"></div>
+    </section>
+
+    <section id="verify">
+      <h2>Verify OTP & Create Card</h2>
+      <form id="verify-otp-form">
+        <label>Phone
+          <input name="phone" type="tel" required placeholder="+9665...">
+        </label>
+        <label>OTP
+          <input name="otp" type="text" required maxlength="6">
+        </label>
+        <label>Card ID
+          <input name="card_id" type="text" required>
+        </label>
+        <label>Name
+          <input name="name" type="text" required>
+        </label>
+        <button type="submit">Verify & Create</button>
+      </form>
+      <div id="verify-otp-result" class="result"></div>
+    </section>
+
+    <section id="cards">
+      <h2>Lookup Card</h2>
+      <form id="get-card-form">
+        <label>Card ID
+          <input name="card_id" type="text" required>
+        </label>
+        <button type="submit">Get Card</button>
+      </form>
+      <pre id="get-card-result" class="result"></pre>
+    </section>
+
+  </main>
+
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
