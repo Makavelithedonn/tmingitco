@@ -1,9 +1,12 @@
 /* Minimal styles to emulate responsive behavior */
-:root{--max-width:900px;--accent:#0a66c2}
+ :root{--max-width:900px;--accent:#0a66c2}
 *{box-sizing:border-box}
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.4;margin:0;color:#111}
 .site-header{background:#fff;border-bottom:1px solid #eee}
-.nav{display:flex;gap:1rem;padding:1rem;max-width:var(--max-width);margin:0 auto}
+.nav-bar{display:flex;align-items:center;gap:1rem;max-width:var(--max-width);margin:0 auto;padding:0.5rem 1rem}
+#nav-toggle{background:transparent;border:0;font-size:1.25rem;padding:.25rem;display:inline-block}
+.logo img{height:28px}
+.nav{display:flex;gap:1rem;margin-left:auto}
 .nav a{text-decoration:none;color:var(--accent)}
 .container{max-width:var(--max-width);margin:2rem auto;padding:0 1rem}
 form{display:flex;flex-direction:column;gap:.5rem;max-width:420px}
@@ -11,4 +14,11 @@ label{display:flex;flex-direction:column;font-size:.95rem}
 input{padding:.5rem;border:1px solid #ccc;border-radius:6px}
 button{padding:.6rem .9rem;border:0;background:var(--accent);color:#fff;border-radius:6px}
 .result{margin-top:.5rem;color:#064}
-@media(min-width:700px){.nav{padding:1rem 2rem}.container{padding:0}}
+
+/* Mobile styles: collapse nav into vertical when toggled */
+@media(max-width:699px){
+  .nav{position:absolute;top:56px;left:0;right:0;display:flex;flex-direction:column;background:#fff;padding:1rem;border-top:1px solid #eee;transform-origin:top;display:none}
+  .nav.open{display:flex}
+}
+
+@media(min-width:700px){.nav{padding:1rem 2rem;display:flex}.container{padding:0}}
