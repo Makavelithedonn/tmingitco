@@ -42,23 +42,10 @@ async function rateLimited(env, ip, RATE_KV, limit=20, periodSeconds=60){
   }
 }
 
-function hmac(phone, secret){
-  // HMAC using subtle crypto - for module worker this runs in global scope only as async, but create a sync placeholder using a simple SHA-256 via built-in crypto
-  const enc = new TextEncoder();
-  return crypto.subtle.importKey('raw', enc.encode(secret), {name:'HMAC',hash:'SHA-256'}, false, ['sign']).then(key=>
-    crypto.subtle.sign('HMAC', key, enc.encode(phone))
-  ).then(sig=>{
-    const b = new Uint8Array(sig);
-    return Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join('');
-  })
-}
+import { genOtp as _genOtp, hmac as _hmac } from './utils.js';
 
-function genOtp(){
-  // cryptographically secure 6-digit
-  const arr = new Uint32Array(1);
-  crypto.getRandomValues(arr);
-  return String(arr[0] % 1000000).padStart(6,'0');
-}
+function hmac(phone, secret){ return _hmac(phone, secret) }
+function genOtp(){ return _genOtp() }
 
 async function handleRequestOtp(request, env, ip){
   const RATE_KV = env.RATE_KV;
@@ -134,3 +121,5 @@ async function sendSms(phone, otp, env){
   console.log(`MOCK SMS to ${phone}: OTP=${otp}`);
 }
 
+// Export handler functions for unit testing
+export { handleRequestOtp, handleVerifyOtp, handleCreateCard, handleGetCard };
