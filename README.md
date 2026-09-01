@@ -2,6 +2,11 @@ Clone of rgosuksa.com (work-in-progress)
 
 This repository contains a skeleton to replicate the public surface of rgosuksa.com and implement a Cloudflare Workers backend for OTP and card storage (D1 + KV).
 
+**Live Deployment** (tested and working):
+- Worker URL: https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev
+- KV Namespaces: OTP_KV (d1b917d366f34b0a8f132b58c294a69a), RATE_KV (a7ee726af5284e3ebb5649847bb0bde4)
+- D1 Database: rgosuksa_db (4fa3a192-b0dc-47f5-9ede-b25c7d1fb469)
+
 Quick start (local dev)
 
 1. Install Wrangler (https://developers.cloudflare.com/workers/cli-wrangler/install):
@@ -35,19 +40,32 @@ Run integration tests (requires wrangler dev running with DEV_SHOW_OTP=1):
 
 Note: DEV_SHOW_OTP=1 returns the OTP in the /api/request-otp response for development/testing only. Never enable in production.
 
-Endpoints (examples):
+Live Endpoint Examples (https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev):
+- Request OTP: curl -X POST https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/request-otp -H 'Content-Type: application/json' -d '{"phone":"+966512345678"}'
+- Verify OTP: curl -X POST https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/verify-otp -H 'Content-Type: application/json' -d '{"phone":"+966512345678","otp":"123456"}'
+- Create card: curl -X POST https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/cards -H 'Content-Type: application/json' -d '{"card_id":"card1","name":"Ali","phone":"+966512345678"}'
+- Get card: curl https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/cards/card1
 
-Request OTP
-curl -X POST http://localhost:8787/api/request-otp -H 'Content-Type: application/json' -d '{"phone":"+9665xxxx"}'
+SMS Provider Integration (optional for production):
+The worker supports Twilio and Vonage SMS providers. To enable real SMS delivery:
 
-Verify OTP
-curl -X POST http://localhost:8787/api/verify-otp -H 'Content-Type: application/json' -d '{"phone":"+9665xxxx","otp":"123456"}'
+1. Get provider API credentials (Twilio or Vonage)
+2. Set secrets in wrangler:
+   - wrangler secret put SMS_API_KEY (your API key)
+   - Set SMS_PROVIDER environment variable in wrangler.toml to "twilio" or "vonage"
+3. For local development: mock SMS logs to console (no real SMS sent)
+4. Example env setup in wrangler.toml:
+   ```toml
+   [vars]
+   SMS_PROVIDER = "twilio"
+   ```
 
-Create card (after OTP consumed)
-curl -X POST http://localhost:8787/api/cards -H 'Content-Type: application/json' -d '{"card_id":"card1","name":"Ali","phone":"+9665xxxx"}'
+Mobile Testing (Saudi region):
+- Use browser DevTools to set viewport (e.g., iPhone 12: 390x844)
+- Or use CF-Connecting-IP header to simulate Saudi Arabia traffic:
+  curl -H 'CF-Connecting-IP: 82.102.0.1' https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/request-otp ...
 
-Get card
-curl http://localhost:8787/api/cards/card1
+Local Endpoint Examples:
 
 Security notes
 - Phone numbers are HMACed before storing (phone_hash). Use an environment secret (HMAC_SECRET). Do NOT commit secrets.
@@ -57,8 +75,5 @@ Security notes
 Next steps
 - Crawl rgosuksa.com and replicate full HTML/CSS/assets into /site preserving routes and filenames. NOTE: This repo includes a "scripts/crawl-skeleton.js" that fetches structural skeleton pages but intentionally strips original textual content and images to avoid copying copyrighted content. To fetch and save raw pages (ensure you have rights), adapt that script accordingly.
 - Expand client JS to match exact client behavior and interactive features.
-- Wire a real SMS provider: add an adapter in workers/worker.js and document env vars (SMS_API_KEY, SMS_SENDER). Example env variables required:
-  - SMS_API_KEY: API key for provider
-  - SMS_SENDER: Sender ID or phone
-
-- Add tests and CI (GitHub Actions) to run unit tests and wrangler publish on tag.
+- Wire a real SMS provider (Twilio/Vonage): use env vars SMS_API_KEY and SMS_PROVIDER. Implementation examples in workers/sms.js
+- Complete site replication (all pages, assets, responsive mobile view)
