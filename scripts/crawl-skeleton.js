@@ -3,7 +3,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import fetch from 'node-fetch';
+// Use global fetch available in Node 18+
 
 const BASE = 'https://rgosuksa.com';
 const outDir = './site/replica';

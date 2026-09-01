@@ -1,0 +1,35 @@
+# Live Worker Endpoint Curl Examples
+# Worker URL: https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev
+
+# Request OTP
+curl -X POST https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/request-otp \
+  -H 'Content-Type: application/json' \
+  -d '{"phone":"+966512345678"}'
+
+# Verify OTP (use the actual OTP from request-otp response in dev, or the one sent via SMS)
+curl -X POST https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/verify-otp \
+  -H 'Content-Type: application/json' \
+  -d '{"phone":"+966512345678","otp":"123456"}'
+
+# Create card (after OTP is verified)
+curl -X POST https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/cards \
+  -H 'Content-Type: application/json' \
+  -d '{"card_id":"card-001","name":"Test User","phone":"+966512345678"}'
+
+# Get card
+curl https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/cards/card-001
+
+# Expected flow:
+# 1. Call request-otp (gets mocked SMS log or real SMS if provider configured)
+# 2. Call verify-otp with the OTP (OTP consumed from KV)
+# 3. Call create card with phone (if OTP was consumed, this works; if not, error)
+# 4. Call get card to fetch the stored record from D1
+
+# Testing rate limiting:
+# Rapidly call request-otp to trigger 429 rate limit
+
+# Testing geo (Saudi Arabia via CF-Connecting-IP header):
+curl -X POST https://makavelithedonn-clone-rgosuksa.devopsjacob.workers.dev/api/request-otp \
+  -H 'Content-Type: application/json' \
+  -H 'CF-Connecting-IP: 82.102.0.1' \
+  -d '{"phone":"+966512345678"}'

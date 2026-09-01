@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { describe, it } from 'node:test';
-import { handleRequestOtp, handleVerifyOtp, handleCreateCard, handleGetCard } from '../../workers/worker.js';
+import { handleRequestOtp, handleVerifyOtp, handleCreateCard, handleGetCard } from '../../workers/handlers.js';
 
 function makeReq(path, body){
   const url = 'https://example.com'+path;
@@ -48,7 +48,7 @@ const env = {
 describe('worker endpoints', ()=>{
   it('request-otp -> returns otp in dev', async ()=>{
     const req = makeReq('/api/request-otp',{phone:'+966512345678'});
-    const res = await handleRequestOtp(req, env, '127.0.0.1');
+    const res = await handleRequestOtp(req, env);
     const j = await res.json();
     assert.strictEqual(res.status, 200);
     assert.ok(j.ok);
@@ -58,11 +58,11 @@ describe('worker endpoints', ()=>{
   it('verify-otp -> consumes otp', async ()=>{
     const phone = '+966512345679';
     // request
-    let res = await handleRequestOtp(makeReq('/api/request-otp',{phone}), env, '127.0.0.1');
+    let res = await handleRequestOtp(makeReq('/api/request-otp',{phone}), env);
     let j = await res.json();
     const otp = j.otp;
     // verify
-    res = await handleVerifyOtp(makeReq('/api/verify-otp',{phone, otp}), env, '127.0.0.1');
+    res = await handleVerifyOtp(makeReq('/api/verify-otp',{phone, otp}), env);
     j = await res.json();
     assert.ok(j.ok);
     // ensure consumed
@@ -74,19 +74,19 @@ describe('worker endpoints', ()=>{
     const phone = '+966512345680';
     // request and verify
     let req = makeReq('/api/request-otp',{phone});
-    let res = await handleRequestOtp(req, env, '127.0.0.1');
+    let res = await handleRequestOtp(req, env);
     let j = await res.json();
     const otp = j.otp;
-    res = await handleVerifyOtp(makeReq('/api/verify-otp',{phone, otp}), env, '127.0.0.1');
+    res = await handleVerifyOtp(makeReq('/api/verify-otp',{phone, otp}), env);
     j = await res.json();
     assert.ok(j.ok);
     // create card
     const cardId = 'c-123';
-    res = await handleCreateCard(makeReq('/api/cards',{card_id:cardId, name:'Test', phone}), env, '127.0.0.1');
+    res = await handleCreateCard(makeReq('/api/cards',{card_id:cardId, name:'Test', phone}), env);
     j = await res.json();
     assert.ok(j.ok);
     // get card
-    res = await handleGetCard(cardId, env, '127.0.0.1');
+    res = await handleGetCard(cardId, env);
     j = await res.json();
     assert.ok(j.ok);
     assert.strictEqual(j.card.card_id, cardId);
