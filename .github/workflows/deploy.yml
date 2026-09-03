@@ -1,0 +1,33 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install Wrangler
+        run: npm install -g wrangler
+      - name: Configure secrets
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          echo "Using CF_API_TOKEN from secrets"
+      - name: Publish with wrangler
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          HMAC_SECRET: ${{ secrets.HMAC_SECRET }}
+          SMS_API_KEY: ${{ secrets.SMS_API_KEY }}
+          DEV_SHOW_OTP: '0'
+        run: |
+          wrangler publish

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact — rgosuksa (replica)</title>
+  <link rel="stylesheet" href="/site/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-bar">
+      <button id="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+      <a href="/" class="logo"><img src="/site/assets/logo.svg" alt="logo"/></a>
+      <nav class="nav" role="navigation">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Contact Us</h1>
+    <section class="contact-form">
+      <form id="contact-form">
+        <label>Name
+          <input type="text" name="name" required>
+        </label>
+        <label>Email
+          <input type="email" name="email" required>
+        </label>
+        <label>Phone
+          <input type="tel" name="phone" placeholder="+966...">
+        </label>
+        <label>Message
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit">Send Message</button>
+      </form>
+      <div id="contact-result" class="result"></div>
+    </section>
+
+    <section class="contact-info">
+      <h2>Other Ways to Reach Us</h2>
+      <ul>
+        <li>Email: support@rgosuksa.com</li>
+        <li>Phone: +966 (country code for Saudi Arabia)</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 rgosuksa (replica). <a href="/contact.html">Contact us</a></p>
+  </footer>
+
+  <script src="/site/js/nav.js"></script>
+  <script src="/site/js/contact.js"></script>
+</body>
+</html>

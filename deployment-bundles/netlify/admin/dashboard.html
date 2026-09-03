@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/site/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header style="display:flex;justify-content:space-between;align-items:center">
+      <h1>Admin Dashboard</h1>
+      <div>
+        <button id="logout">Logout</button>
+      </div>
+    </header>
+
+    <aside style="margin-top:1em;">
+      <nav>
+        <ul>
+          <li><a href="#" id="nav-live">Live (<span id="pending-count">0</span>)</a></li>
+          <li><a href="#" id="nav-completed">Completed (<span id="completed-count">0</span>)</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <section>
+        <input id="filter-status" placeholder="status (pending/accepted/rejected)" />
+        <button id="reload">Reload</button>
+      </section>
+
+      <section>
+        <table id="subs-table" border="1" style="width:100%;border-collapse:collapse;margin-top:1em">
+          <thead>
+            <tr><th>ID</th><th>Phone</th><th>Card ID</th><th>Name</th><th>IP</th><th>Submitted At</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="/site/admin/js/admin.js"></script>
+</body>
+</html>

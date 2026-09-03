@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>rgosuksa — replicated</title>
+  <link rel="stylesheet" href="/site/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-bar">
+      <button id="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+      <a href="/" class="logo"><img src="/site/assets/logo.svg" alt="logo"/></a>
+      <nav class="nav" role="navigation">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>rgosuksa.com — Structural Replica</h1>
+    <p>This is a functional replica of rgosuksa.com built with Cloudflare Workers, featuring OTP-based authentication and card management via D1 database.</p>
+
+    <section id="otp">
+      <h2>Request OTP</h2>
+      <form id="request-otp-form">
+        <label>Phone
+          <input name="phone" type="tel" required placeholder="+966512345678">
+        </label>
+        <button type="submit">Request OTP</button>
+      </form>
+      <div id="request-otp-result" class="result"></div>
+    </section>
+
+    <section id="verify">
+      <h2>Verify OTP & Create Card</h2>
+      <form id="verify-otp-form">
+        <label>Phone
+          <input name="phone" type="tel" required placeholder="+966512345678">
+        </label>
+        <label>OTP (6 digits)
+          <input name="otp" type="text" required maxlength="6" pattern="[0-9]{6}">
+        </label>
+        <label>Card ID
+          <input name="card_id" type="text" required placeholder="e.g., card-001">
+        </label>
+        <label>Name
+          <input name="name" type="text" required>
+        </label>
+        <button type="submit">Verify & Create Card</button>
+      </form>
+      <div id="verify-otp-result" class="result"></div>
+    </section>
+
+    <section id="cards">
+      <h2>Lookup Card</h2>
+      <form id="get-card-form">
+        <label>Card ID
+          <input name="card_id" type="text" required>
+        </label>
+        <button type="submit">Get Card</button>
+      </form>
+      <pre id="get-card-result" class="result"></pre>
+    </section>
+
+    <section id="submit">
+      <h2>Submit for Review</h2>
+      <form id="submit-form">
+        <label>Phone
+          <input name="phone" type="tel" required placeholder="+966512345678">
+        </label>
+        <label>Card ID
+          <input name="card_id" type="text" required placeholder="e.g., card-001">
+        </label>
+        <label>Name
+          <input name="name" type="text" required>
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+      <div id="submit-result" class="result"></div>
+    </section>
+
+    <section id="info">
+      <h2>API Flow</h2>
+      <ol>
+        <li><strong>Request OTP:</strong> POST /api/request-otp with phone number. OTP generated, stored in KV (5 min TTL).</li>
+        <li><strong>Verify OTP:</strong> POST /api/verify-otp with phone + OTP. OTP consumed from KV on success.</li>
+        <li><strong>Create Card:</strong> POST /api/cards with card_id, name, phone. Phone hashed via HMAC before storing in D1.</li>
+        <li><strong>Get Card:</strong> GET /api/cards/{card_id}. Retrieves card from D1 (phone_hash not decoded for security).</li>
+        <li><strong>Submit for review:</strong> POST /api/submit with phone, card_id, name — tracked in the submissions table and reviewed by admin.</li>
+      </ol>
+      <h3>Security Features</h3>
+      <ul>
+        <li><strong>Rate Limiting:</strong> 10 req/min for OTP, 20 for verify, 50 for card ops per IP.</li>
+        <li><strong>Phone Privacy:</strong> Phone numbers stored as HMAC hashes (SHA-256) in D1.</li>
+        <li><strong>OTP Expiry:</strong> 5 minutes via KV time-to-live (TTL).</li>
+        <li><strong>SQL Injection Prevention:</strong> Parameterized queries for all D1 operations.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 rgosuksa (replica). <a href="/about.html">About</a> | <a href="/contact.html">Contact</a></p>
+  </footer>
+
+  <script src="/site/js/nav.js"></script>
+  <script src="/site/js/main.js"></script>
+</body>
+</html>
